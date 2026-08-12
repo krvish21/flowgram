@@ -7,6 +7,7 @@ export default function Toolbar({
   doc,
   onFit,
   onReset,
+  onGenerate,
   showInspector,
   toggleInspector,
 }) {
@@ -74,6 +75,9 @@ export default function Toolbar({
         title="Nodes are editable in place — this panel is optional"
       >
         Details
+      </button>
+      <button onClick={onGenerate} title="Scaffold a codebase from the flow diagram">
+        Generate
       </button>
       <button onClick={exportJson}>Export</button>
       <button onClick={() => fileRef.current.click()}>Import</button>

@@ -36,8 +36,17 @@ function load() {
   }
 }
 
-/** Types that no longer exist collapse onto the generic 'simple' node. */
-const RETIRED = { service: 'simple', client: 'simple', queue: 'simple' };
+/**
+ * Legacy type ids collapse onto their closest REST-layer equivalents so
+ * documents saved before the layer model exist safely on load.
+ */
+const RETIRED = {
+  endpoint: 'controller',
+  simple: 'service',
+  client: 'service',
+  queue: 'service',
+  datastore: 'data',
+};
 
 export function migrate(doc) {
   return {

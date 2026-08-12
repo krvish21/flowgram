@@ -226,7 +226,7 @@ button.mini { padding: 1px 6px; font-size: 11px; margin-left: 8px; }
   border-style: dashed;
 }
 .node.shape-diamond { border-radius: 22px; }
-.node.type-datastore { border-radius: 12px 12px 20px 20px; }
+.node.type-data { border-radius: 12px 12px 20px 20px; }
 .node.type-client { border-radius: 12px; border-width: 2px; }
 .node.type-queue { border-left: 3px solid var(--accent-node); }
 .node.type-external { border-style: dashed; }
@@ -521,4 +521,53 @@ textarea.has-error { border-color: var(--danger); }
 }
 .conn-summary span {
   border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px;
+}
+
+/* ---------- generate codebase ---------- */
+.generate-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8, 11, 16, .6);
+}
+.generate-panel {
+  width: min(940px, 92vw); height: min(640px, 86vh);
+  display: flex; flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .6);
+  overflow: hidden;
+}
+.generate-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.generate-head h2 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--muted); margin: 0;
+}
+.generate-head .muted.small { font-size: 12px; }
+.generate-body { flex: 1; display: flex; min-height: 0; }
+.file-tree {
+  width: 260px; flex: none; margin: 0; padding: 8px;
+  list-style: none; overflow: auto;
+  border-right: 1px solid var(--line);
+  background: var(--panel-2);
+  font-size: 12px;
+}
+.file-tree button {
+  display: block; width: 100%; text-align: left;
+  background: transparent; border: 0; border-radius: 6px;
+  padding: 5px 8px; margin-bottom: 1px;
+  color: #b9c6d8; font-family: Consolas, monospace; font-size: 12px;
+}
+.file-tree button:hover:not(.active) { background: rgba(255, 255, 255, .06); }
+.file-tree button.active { background: var(--accent); color: #fff; }
+.file-preview {
+  flex: 1; margin: 0; overflow: auto;
+  background: #0b1017; color: #cfe0f5;
+  padding: 14px 16px; font-size: 12.5px; line-height: 1.55;
+  font-family: Consolas, "Courier New", monospace;
+  white-space: pre;
 }

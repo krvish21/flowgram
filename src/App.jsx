@@ -3,6 +3,7 @@ import Canvas from './components/Canvas.jsx';
 import Inspector from './components/Inspector.jsx';
 import Toolbar from './components/Toolbar.jsx';
 import Palette from './components/Palette.jsx';
+import GeneratePanel from './components/GeneratePanel.jsx';
 import { useFlowStore } from './hooks/useFlowStore.js';
 import { bounds } from './lib/geometry.js';
 import { DEFAULT_TYPE } from './lib/nodeTypes.js';
@@ -15,6 +16,7 @@ export default function App() {
   const [view, setView] = useState({ x: 0, y: 0, zoom: 1 });
   const [activeType, setActiveType] = useState(DEFAULT_TYPE);
   const [showInspector, setShowInspector] = useState(false);
+  const [showGenerate, setShowGenerate] = useState(false);
 
   const fit = useCallback(() => {
     const items = [...doc.nodes, ...(doc.containers || [])];
@@ -40,6 +42,7 @@ export default function App() {
         doc={doc}
         onFit={fit}
         onReset={() => setView({ x: 0, y: 0, zoom: 1 })}
+        onGenerate={() => setShowGenerate(true)}
         showInspector={showInspector}
         toggleInspector={() => setShowInspector((s) => !s)}
       />
@@ -70,6 +73,7 @@ export default function App() {
           />
         )}
       </div>
+      {showGenerate && <GeneratePanel doc={doc} onClose={() => setShowGenerate(false)} />}
     </div>
   );
 }

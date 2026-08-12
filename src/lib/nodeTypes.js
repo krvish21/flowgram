@@ -10,14 +10,15 @@
 // 'text' | 'textarea' | 'payload' | 'select'
 
 export const NODE_TYPES = {
-  endpoint: {
-    label: 'Endpoint',
-    icon: '⇄',
+  controller: {
+    label: 'Controller',
+    icon: 'λ',
     accent: '#4f8cff',
     defaults: {
-      title: 'New endpoint',
+      title: 'getResource',
       method: 'GET',
-      path: '/resource',
+      path: '/resources/:id',
+      runtime: 'Node 20',
       notes: '',
       request: '',
       requestKind: 'none',
@@ -35,14 +36,21 @@ export const NODE_TYPES = {
         width: 110,
         options: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       },
-      { key: 'title', label: 'Title', kind: 'text', slot: 'title' },
+      { key: 'title', label: 'Handler name', kind: 'text', slot: 'title' },
       {
         key: 'path',
-        label: 'Path',
+        label: 'Route',
         kind: 'text',
         slot: 'sub',
         mono: true,
         placeholder: '/users/:id',
+      },
+      {
+        key: 'runtime',
+        label: 'Runtime',
+        kind: 'select',
+        slot: 'meta',
+        options: ['Node 18', 'Node 20', 'Node 22', 'Python 3.12', 'Go', '.NET 8'],
       },
       { key: 'notes', label: 'Notes', kind: 'textarea', slot: 'body' },
       { key: 'request', label: 'Request', kind: 'json', slot: 'drawer' },
@@ -50,35 +58,44 @@ export const NODE_TYPES = {
     ],
   },
 
-  simple: {
-    label: 'Simple',
-    icon: '▢',
-    accent: '#9db4d6',
+  service: {
+    label: 'Service',
+    icon: '⚙',
+    accent: '#26e0a5',
     defaults: {
-      title: 'Step',
+      title: 'getResourceById',
+      returns: 'Promise<Resource>',
       notes: '',
-      request: '',
+      request: 'id: string — resource id\n',
       requestKind: 'args',
-      response: '',
-      responseKind: 'none',
+      response: '{\n  \n}',
+      responseKind: 'json',
     },
-    subtitle: () => '',
-    chip: () => null,
+    subtitle: (n) => n.returns,
+    chip: () => 'SRV',
     fields: [
-      { key: 'title', label: 'Title', kind: 'text', slot: 'title' },
+      { key: 'title', label: 'Function', kind: 'text', slot: 'title' },
+      {
+        key: 'returns',
+        label: 'Returns',
+        kind: 'text',
+        slot: 'sub',
+        mono: true,
+        placeholder: 'Promise<Resource>',
+      },
       { key: 'notes', label: 'Notes', kind: 'textarea', slot: 'body' },
-      { key: 'request', label: 'Request', kind: 'json', slot: 'drawer' },
-      { key: 'response', label: 'Response', kind: 'json', slot: 'drawer' },
+      { key: 'request', label: 'Params', kind: 'json', slot: 'drawer' },
+      { key: 'response', label: 'Returns', kind: 'json', slot: 'drawer' },
     ],
   },
 
-  datastore: {
-    label: 'Data store',
-    icon: '🗄',
+  data: {
+    label: 'Data layer',
+    icon: '🗃',
     accent: '#ffca62',
     defaults: {
-      title: 'Database',
-      engine: 'PostgreSQL',
+      title: 'resourceRepository',
+      engine: 'DynamoDB',
       notes: '',
       schema: '{\n  \n}',
       schemaKind: 'json',
@@ -86,16 +103,54 @@ export const NODE_TYPES = {
     subtitle: (n) => n.engine,
     chip: () => 'DB',
     fields: [
-      { key: 'title', label: 'Name', kind: 'text', slot: 'title' },
+      { key: 'title', label: 'Repository', kind: 'text', slot: 'title' },
       {
         key: 'engine',
         label: 'Engine',
         kind: 'select',
         slot: 'sub',
-        options: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'DynamoDB', 'S3', 'Other'],
+        options: ['DynamoDB', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'S3'],
       },
       { key: 'notes', label: 'Notes', kind: 'textarea', slot: 'body' },
-      { key: 'schema', label: 'Schema / shape', kind: 'json', slot: 'drawer' },
+      { key: 'schema', label: 'Table / shape', kind: 'json', slot: 'drawer' },
+    ],
+  },
+
+  model: {
+    label: 'Model',
+    icon: '◇',
+    accent: '#c792ea',
+    defaults: {
+      title: 'Resource',
+      notes: '',
+      schema: '{\n  "id": "string",\n  "name": "string"\n}',
+      schemaKind: 'json',
+    },
+    subtitle: () => '',
+    chip: () => 'MOD',
+    fields: [
+      { key: 'title', label: 'Model', kind: 'text', slot: 'title' },
+      { key: 'notes', label: 'Notes', kind: 'textarea', slot: 'body' },
+      { key: 'schema', label: 'Fields', kind: 'json', slot: 'drawer' },
+    ],
+  },
+
+  interface: {
+    label: 'Interface',
+    icon: '☰',
+    accent: '#7fdbca',
+    defaults: {
+      title: 'CreateResourceRequest',
+      notes: '',
+      schema: '{\n  "name": "string"\n}',
+      schemaKind: 'json',
+    },
+    subtitle: () => '',
+    chip: () => 'INT',
+    fields: [
+      { key: 'title', label: 'Interface', kind: 'text', slot: 'title' },
+      { key: 'notes', label: 'Notes', kind: 'textarea', slot: 'body' },
+      { key: 'schema', label: 'Members', kind: 'json', slot: 'drawer' },
     ],
   },
 
@@ -174,7 +229,7 @@ export const NODE_TYPE_LIST = Object.entries(NODE_TYPES).map(([id, t]) => ({
   ...t,
 }));
 
-export const DEFAULT_TYPE = 'endpoint';
+export const DEFAULT_TYPE = 'controller';
 
 export function getType(id) {
   return NODE_TYPES[id] || NODE_TYPES[DEFAULT_TYPE];
@@ -193,7 +248,7 @@ export const METHOD_COLORS = {
 
 export function chipColor(node) {
   const t = getType(node.type);
-  if (node.type === 'endpoint') return METHOD_COLORS[node.method] || t.accent;
+  if (node.type === 'controller') return METHOD_COLORS[node.method] || t.accent;
   return t.accent;
 }
 
